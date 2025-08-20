@@ -54,6 +54,7 @@ struct Router {
     service_discovery_namespace: Option<String>,
     prefill_selector: HashMap<String, String>,
     decode_selector: HashMap<String, String>,
+    service_discovery_port_annotation: String,
     bootstrap_port_annotation: String,
     prometheus_port: Option<u16>,
     prometheus_host: Option<String>,
@@ -179,6 +180,7 @@ impl Router {
                 selector: self.selector.clone(),
                 prefill_selector: self.prefill_selector.clone(),
                 decode_selector: self.decode_selector.clone(),
+                service_discovery_port_annotation: self.service_discovery_port_annotation.clone(),
                 bootstrap_port_annotation: self.bootstrap_port_annotation.clone(),
             })
         } else {
@@ -271,6 +273,7 @@ impl Router {
         service_discovery_namespace = None,
         prefill_selector = HashMap::new(),
         decode_selector = HashMap::new(),
+        service_discovery_port_annotation = String::from("sglang.ai/service-discovery-port"),
         bootstrap_port_annotation = String::from("sglang.ai/bootstrap-port"),
         prometheus_port = None,
         prometheus_host = None,
@@ -335,6 +338,7 @@ impl Router {
         service_discovery_namespace: Option<String>,
         prefill_selector: HashMap<String, String>,
         decode_selector: HashMap<String, String>,
+        service_discovery_port_annotation: String,
         bootstrap_port_annotation: String,
         prometheus_port: Option<u16>,
         prometheus_host: Option<String>,
@@ -410,6 +414,7 @@ impl Router {
             service_discovery_namespace,
             prefill_selector,
             decode_selector,
+            service_discovery_port_annotation,
             bootstrap_port_annotation,
             prometheus_port,
             prometheus_host,
@@ -473,6 +478,7 @@ impl Router {
                 pd_mode: self.pd_disaggregation,
                 prefill_selector: self.prefill_selector.clone(),
                 decode_selector: self.decode_selector.clone(),
+                service_discovery_port_annotation: self.service_discovery_port_annotation.clone(),
                 bootstrap_port_annotation: self.bootstrap_port_annotation.clone(),
             })
         } else {

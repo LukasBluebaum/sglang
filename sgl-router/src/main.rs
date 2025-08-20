@@ -393,6 +393,7 @@ impl CliArgs {
                 selector: Self::parse_selector(&self.selector),
                 prefill_selector: Self::parse_selector(&self.prefill_selector),
                 decode_selector: Self::parse_selector(&self.decode_selector),
+                service_discovery_port_annotation: "sglang.ai/service-discovery-port".to_string(),
                 bootstrap_port_annotation: "sglang.ai/bootstrap-port".to_string(),
             })
         } else {
@@ -492,6 +493,7 @@ impl CliArgs {
                 pd_mode: self.pd_disaggregation,
                 prefill_selector: Self::parse_selector(&self.prefill_selector),
                 decode_selector: Self::parse_selector(&self.decode_selector),
+                service_discovery_port_annotation: "sglang.ai/service-discovery-port".to_string(),
                 bootstrap_port_annotation: "sglang.ai/bootstrap-port".to_string(),
             })
         } else {

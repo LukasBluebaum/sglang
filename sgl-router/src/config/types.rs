@@ -201,6 +201,8 @@ pub struct DiscoveryConfig {
     pub prefill_selector: HashMap<String, String>,
     /// PD mode decode selector
     pub decode_selector: HashMap<String, String>,
+    /// Port annotation key
+    pub service_discovery_port_annotation: String,
     /// Bootstrap port annotation key
     pub bootstrap_port_annotation: String,
 }
@@ -215,6 +217,7 @@ impl Default for DiscoveryConfig {
             selector: HashMap::new(),
             prefill_selector: HashMap::new(),
             decode_selector: HashMap::new(),
+            service_discovery_port_annotation: "sglang.ai/service-discovery-port".to_string(),
             bootstrap_port_annotation: "sglang.ai/bootstrap-port".to_string(),
         }
     }
@@ -694,6 +697,7 @@ mod tests {
         assert!(config.selector.is_empty());
         assert!(config.prefill_selector.is_empty());
         assert!(config.decode_selector.is_empty());
+        assert_eq!(config.service_discovery_port_annotation, "sglang.ai/service-discovery-port");
         assert_eq!(config.bootstrap_port_annotation, "sglang.ai/bootstrap-port");
     }
 
@@ -711,6 +715,7 @@ mod tests {
             selector: selector.clone(),
             prefill_selector: selector.clone(),
             decode_selector: selector.clone(),
+            service_discovery_port_annotation: "custom.io/service-discovery-port".to_string(),
             bootstrap_port_annotation: "custom.io/port".to_string(),
         };
 
@@ -1039,6 +1044,7 @@ mod tests {
                 selector: selectors.clone(),
                 prefill_selector: selectors.clone(),
                 decode_selector: selectors,
+                service_discovery_port_annotation: "mycompany.io/main-port".to_string(),
                 bootstrap_port_annotation: "mycompany.io/bootstrap".to_string(),
             }),
             metrics: Some(MetricsConfig {
