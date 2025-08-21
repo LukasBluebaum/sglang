@@ -156,7 +156,7 @@ class LoRARadixCache(BasePrefixCache):
 
     def cache_finished_req(self, req: Req):
         """Cache request when it finishes."""
-        if self.disable:
+        if self.disable or req.disable_cache:
             kv_indices = self.req_to_token_pool.req_to_token[
                 req.req_pool_idx, : len(req.origin_input_ids) + len(req.output_ids) - 1
             ]
@@ -185,7 +185,7 @@ class LoRARadixCache(BasePrefixCache):
 
     def cache_unfinished_req(self, req: Req):
         """Cache request when it is unfinished."""
-        if self.disable:
+        if self.disable or req.disable_cache:
             return
 
         token_ids = req.fill_ids
@@ -249,7 +249,7 @@ class LoRARadixCache(BasePrefixCache):
                 heapq.heappush(leaves, x.parent)
 
     def inc_lock_ref(self, node: LoRATreeNode):
-        if self.disable:
+        if self.disable or node is None:
             return 0
 
         delta = 0

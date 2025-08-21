@@ -432,6 +432,7 @@ class Req:
         bootstrap_room: Optional[int] = None,
         data_parallel_rank: Optional[int] = None,
         vocab_size: Optional[int] = None,
+        disable_cache: Optional[bool] = False,
     ):
         # Input and output info
         self.rid = rid
@@ -482,6 +483,7 @@ class Req:
         self.stream = stream
         self.eos_token_ids = eos_token_ids
         self.vocab_size = vocab_size
+        self.disable_cache = disable_cache
 
         # For incremental decoding
         # ----- | --------- read_ids -------|
@@ -632,7 +634,7 @@ class Req:
         tree_cache: Optional[BasePrefixCache] = None,
     ):
         self.fill_ids = self.origin_input_ids + self.output_ids
-        if tree_cache is not None:
+        if tree_cache is not None and not self.disable_cache:
             if isinstance(tree_cache, LoRARadixCache):
                 (
                     self.prefix_indices,
@@ -761,12 +763,20 @@ class Req:
         self.already_computed = 0
 
     def offload_kv_cache(self, req_to_token_pool, token_to_kv_pool_allocator):
+        # These can't be removed, but it is still only kept until the request is resumed and 
+        # no one else can access it
+        # if self.disable_cache:
+        #    return
+
         token_indices = req_to_token_pool.req_to_token[
             self.req_pool_idx, : self.seqlen - 1
         ]
         self.kv_cache_cpu = token_to_kv_pool_allocator.get_cpu_copy(token_indices)
 
     def load_kv_cache(self, req_to_token_pool, token_to_kv_pool_allocator):
+        # if self.disable_cache:
+        #    return
+
         token_indices = req_to_token_pool.req_to_token[
             self.req_pool_idx, : self.seqlen - 1
         ]

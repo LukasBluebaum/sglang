@@ -163,6 +163,9 @@ class SchedulePolicy:
         self.waiting_queue_radix_tree.reset()
 
         for r in waiting_queue:
+            if r.disable_cache:
+                continue
+
             prefix_ids = r.adjust_max_prefix_ids()
 
             # NOTE: the prefix_indices must always be aligned with last_node

@@ -429,7 +429,7 @@ class SWARadixCache(BasePrefixCache):
 
     def cache_finished_req(self, req: Req) -> None:
         """Cache request when it finishes."""
-        if self.disable:
+        if self.disable or req.disable_cache:
             kv_indices = self.req_to_token_pool.req_to_token[
                 req.req_pool_idx,
                 : len(req.origin_input_ids) + max(len(req.output_ids) - 1, 0),
@@ -466,7 +466,7 @@ class SWARadixCache(BasePrefixCache):
 
     def cache_unfinished_req(self, req: Req) -> None:
         """Cache request when it is unfinished."""
-        if self.disable:
+        if self.disable or req.disable_cache:
             kv_indices = self.req_to_token_pool.req_to_token[
                 req.req_pool_idx, : len(req.fill_ids)
             ]
@@ -616,7 +616,7 @@ class SWARadixCache(BasePrefixCache):
         It locks the full_lock_ref for nodes between the [last node, root), exclusive.
         It locks the swa_lock_ref for nodes between the [last node, swa_uuid_for_lock], inclusive.
         """
-        if self.disable:
+        if self.disable or node is None:
             return None
 
         swa_lock_size = 0
@@ -657,7 +657,7 @@ class SWARadixCache(BasePrefixCache):
         It unlocks the swa_lock_ref for nodes between the [last node, swa_uuid_for_lock], inclusive.
         If swa_uuid_for_lock is None, it unlocks to the root, exclusive.
         """
-        if self.disable:
+        if self.disable or node is None:
             return
 
         dec_lock_swa = True

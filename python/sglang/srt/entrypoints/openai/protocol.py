@@ -446,6 +446,7 @@ class ChatCompletionRequest(BaseModel):
         "result in faster responses and fewer tokens used on reasoning in a response. "
         "Currently only supported for OpenAI models.",
     )
+    disable_cache: bool = False
 
     @model_validator(mode="before")
     @classmethod
